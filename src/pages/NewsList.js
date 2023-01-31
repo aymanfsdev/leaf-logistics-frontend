@@ -92,24 +92,25 @@ const NewsList = ({country}) => {
     };
 
     return (
-        loading ?
-            <CircularProgress style={{position: 'absolute', top: '50%', left: '50%'}} /> :
+        <Container flex>
+            <TextField
+                label="Search news"
+                onChange={onSearchChange}
+                InputProps={{
+                    endAdornment: (
+                        <InputAdornment>
+                            <IconButton>
+                                <SearchIcon/>
+                            </IconButton>
+                        </InputAdornment>
+                    ),
+                }}
+                sx={{display: 'flex', mt: 7}}
+            />
 
-            <Container flex>
-                <TextField
-                    label="Search news"
-                    onChange={onSearchChange}
-                    InputProps={{
-                        endAdornment: (
-                            <InputAdornment>
-                                <IconButton>
-                                    <SearchIcon/>
-                                </IconButton>
-                            </InputAdornment>
-                        ),
-                    }}
-                    sx={{display: 'flex', mt: 7}}
-                />
+            {loading ?
+                <CircularProgress style={{position: 'absolute', top: '50%', left: '50%'}} />
+                :
                 <InfiniteScroll
                     style={{margin: '40px 0px', marginTop: '90px', overflow: 'none'}}
                     dataLength={articles.length}
@@ -120,20 +121,25 @@ const NewsList = ({country}) => {
                     loader={<CircularProgress/>}
                 >
                     <Grid container direction={'row'} spacing={1}>
-                        {articles.map(({urlToImage, title, description, author, url, publishedAt}) => (
-                            <NewsCard
-                                key={url}
-                                urlToImage={urlToImage}
-                                title={title}
-                                description={description}
-                                author={author}
-                                url={url}
-                                publishedAt={publishedAt}
-                            />
-                        ))}
+                        { articles.length > 0 ?
+                            articles.map(({urlToImage, title, description, author, url, publishedAt}) => (
+                                <NewsCard
+                                    key={url}
+                                    urlToImage={urlToImage}
+                                    title={title}
+                                    description={description}
+                                    author={author}
+                                    url={url}
+                                    publishedAt={publishedAt}
+                                />
+                            ))
+                            :
+                            <div style={{textAlign: 'center', width: '100%'}}>Article not found</div>
+                        }
                     </Grid>
                 </InfiniteScroll>
-            </Container>
+            }
+        </Container>
     );
 };
 
